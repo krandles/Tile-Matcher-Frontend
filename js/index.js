@@ -86,12 +86,6 @@ document.addEventListener("DOMContentLoaded", function() {
         setTimeout(() => {
           firstClickedTile.classList.add("matched");
           secondClickedTile.classList.add("matched");
-          // firstClickedTile.classList.toggle("card"); //is this necessary?
-          // secondClickedTile.classList.toggle("card"); //is this necessary?
-          // firstClickedTile.removeEventListener("click", matching); //is this necessary?
-          // secondClickedTile.removeEventListener("click", matching); //is this necessary?
-          // firstClickedTile.setAttribute("onclick", null); //is this necessary?
-          // secondClickedTile.setAttribute("onclick", null); //is this necessary?
           firstClickedTile = undefined;
           secondClickedTile = undefined;
         }, 700);
