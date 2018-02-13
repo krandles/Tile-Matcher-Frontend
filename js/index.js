@@ -90,15 +90,15 @@ document.addEventListener("DOMContentLoaded", function() {
           // secondClickedTile.removeEventListener("click", matching); //is this necessary?
           // firstClickedTile.setAttribute("onclick", null); //is this necessary?
           // secondClickedTile.setAttribute("onclick", null); //is this necessary?
-          firstClickedTile = null;
-          secondClickedTile = null;
+          firstClickedTile = undefined;
+          secondClickedTile = undefined;
         }, 700);
       } else {
         setTimeout(() => {
           firstClickedTile.classList.remove("flip");
           secondClickedTile.classList.remove("flip");
-          firstClickedTile = null;
-          secondClickedTile = null;
+          firstClickedTile = undefined;
+          secondClickedTile = undefined;
         }, 700);
       }
     }
