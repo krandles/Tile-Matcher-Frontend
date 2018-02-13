@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-  //render cards on page
-
   //create shuffled array
   const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
   function shuffle(imageArray) {
@@ -26,40 +24,83 @@ document.addEventListener("DOMContentLoaded", function() {
 
   //grab wrapper from HTML
   const gameWrapper = document.getElementById("wrapper");
-  i3 = 1;
-  for (let i = 1; i < 5; i++) {
-    for (let i2 = 1; i2 < 5; i2++) {
+  //render cards on page
+  idx = 1;
+  for (let y = 1; y < 5; y++) {
+    for (let x = 1; x < 5; x++) {
       //create flip container
       let flipContainer = document.createElement("div");
       flipContainer.classList.add(
         `flip-container`,
         `card`,
-        `row${i2}`, //fix rows & cols
-        `column${i}` //fix rows & cols
+        `row${x}`, //fix rows & cols
+        `column${y}` //fix rows & cols
       );
-      flipContainer.setAttribute("onclick", "this.classList.toggle('flip')");
-      flipContainer.id = `tile${i3}`;
+      // flipContainer.setAttribute("onclick", "this.classList.toggle('flip')");
+      flipContainer.id = `tile${idx}`;
       //create flipper
       let flipper = document.createElement("div");
       flipper.classList.add("flipper");
       //create front of card
       let flipFront = document.createElement("div");
       flipFront.classList.add("front");
-      let flipFrontImage = document.createElement("img");
-      flipFrontImage.src = ""; //SET IMAGE FOR FRONT HERE
+      // let flipFrontImage = document.createElement("img");
+      // flipFrontImage.src = ""; //SET IMAGE FOR FRONT HERE
       //create back of card
       let flipBack = document.createElement("div");
       flipBack.classList.add("back");
       let flipBackImage = document.createElement("img");
-      flipBackImage.src = `./images/tile${shuffledImageArray[i3 - 1]}.png`;
+      flipBackImage.src = `./images/tile${shuffledImageArray[idx - 1]}.png`;
       //append things
-      flipFront.append(flipFrontImage);
+      // flipFront.append(flipFrontImage);
       flipBack.append(flipBackImage);
       flipper.append(flipFront);
       flipper.append(flipBack);
       flipContainer.append(flipper);
       gameWrapper.append(flipContainer);
-      i3 += 1;
+      idx += 1;
+    }
+  }
+
+  //initialize vars for tiles
+  let tiles = document.querySelectorAll(".card");
+  let firstClickedTile;
+  let secondClickedTile;
+  //set event listeners on tiles
+  for (let i = 0; i < tiles.length; i++) {
+    tiles[i].addEventListener("click", matching);
+  }
+
+  //grab onto most recent 2 tiles here
+  function matching(event) {
+    if (!firstClickedTile) {
+      firstClickedTile = event.target.parentNode.parentNode;
+      firstClickedTile.classList.add("flip");
+    } else if (event.target.parentNode.parentNode !== firstClickedTile) {
+      secondClickedTile = event.target.parentNode.parentNode;
+      secondClickedTile.classList.add("flip");
+      //check for match after second tile clicked
+      if (firstClickedTile.innerHTML == secondClickedTile.innerHTML) {
+        setTimeout(() => {
+          firstClickedTile.classList.add("matched");
+          secondClickedTile.classList.add("matched");
+          firstClickedTile.classList.toggle("card"); //is this necessary?
+          secondClickedTile.classList.toggle("card"); //is this necessary?
+          // firstClickedTile.removeEventListener("click", matching); //is this necessary?
+          // secondClickedTile.removeEventListener("click", matching); //is this necessary?
+          // firstClickedTile.setAttribute("onclick", null); //is this necessary?
+          // secondClickedTile.setAttribute("onclick", null); //is this necessary?
+          firstClickedTile = null;
+          secondClickedTile = null;
+        }, 700);
+      } else {
+        setTimeout(() => {
+          firstClickedTile.classList.remove("flip");
+          secondClickedTile.classList.remove("flip");
+          firstClickedTile = null;
+          secondClickedTile = null;
+        }, 700);
+      }
     }
   }
 });
