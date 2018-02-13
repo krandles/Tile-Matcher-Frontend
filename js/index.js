@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
       //create front of card
       let flipFront = document.createElement("div");
       flipFront.classList.add("front");
-      flipFront.innerHTML = `<p>${shuffledImageArray[idx - 1]}</p>`
+      flipFront.innerHTML = `<p>${shuffledImageArray[idx - 1]}</p>`;
       // let flipFrontImage = document.createElement("img");
       // flipFrontImage.src = ""; //SET IMAGE FOR FRONT HERE
       //create back of card
@@ -82,56 +82,56 @@ document.addEventListener("DOMContentLoaded", function() {
       secondClickedTile.classList.add("flip");
       //check for match after second tile clicked
       if (firstClickedTile.innerHTML == secondClickedTile.innerHTML) {
-        tilesClickDelay()
+        tilesClickDelay();
         setTimeout(() => {
           firstClickedTile.classList.add("matched");
           secondClickedTile.classList.add("matched");
           firstClickedTile = undefined;
           secondClickedTile = undefined;
-        }, 700);
-        winCheck()
+          winCheck();
+        }, 100);
       } else {
-        tilesClickDelay()
+        tilesClickDelay();
         setTimeout(() => {
           firstClickedTile.classList.remove("flip");
           secondClickedTile.classList.remove("flip");
           firstClickedTile = undefined;
           secondClickedTile = undefined;
+          winCheck();
         }, 700);
-        winCheck()
       }
     }
   }
 
   function tilesClickDelay() {
     for (let i = 0; i < tiles.length; i++) {
-      tiles[i].removeEventListener('click', matching);
-    }    
+      tiles[i].removeEventListener("click", matching);
+    }
   }
 
   function winCheck() {
     let notMatchedTiles = 0;
 
     for (let i = 0; i < tiles.length; i++) {
-      if (!tiles[i].classList.contains('matched')) {
+      if (!tiles[i].classList.contains("matched")) {
         notMatchedTiles++;
       }
-    } 
+    }
 
     if (notMatchedTiles === 0) {
-      console.log('You won!');
+      console.log("You won!");
       winMenu();
       return;
     } else {
-      setTimeout(() => {
-        for (let i = 0; i < tiles.length; i++) {
-          tiles[i].addEventListener('click', matching);
-        }
-      }, 700);
+      // setTimeout(() => {
+      for (let i = 0; i < tiles.length; i++) {
+        tiles[i].addEventListener("click", matching);
+      }
+      // }, 700);
     }
   }
 
   function winMenu() {
-    alert("You Win!!!")
+    alert("You Win!!!");
   }
 });
