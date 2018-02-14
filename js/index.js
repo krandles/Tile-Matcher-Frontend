@@ -183,11 +183,17 @@ document.addEventListener("DOMContentLoaded", function() {
     const winMenuText = 'Congratulations! You Won!'
     winMenuDiv.innerHTML = `<p>${winMenuText}</p>`
     menuModal.appendChild(winMenuDiv)
+    menuModal.addEventListener('click', loadStartMenu)
     menuModal.style.display = "block"
   }
 
   function loadStartMenu() {
     const menuModal = document.getElementById('menu-modal')
+    menuModal.removeEventListener('click', loadStartMenu)
+    menuModal.innerHTML = ''
+    let wrapper = document.getElementById('wrapper')
+    wrapper.innerHTML = ''
+    timer.innerHTML = '0'
     const startButton = document.createElement('button')
     startButton.innerHTML = '<p>Start Game</p>'
     startButton.addEventListener('click', startGame)
@@ -214,6 +220,7 @@ document.addEventListener("DOMContentLoaded", function() {
       let timerInterval = setInterval(function() {
         incrementTimer();
       }, 1000);
+      intervalID = timerInterval
     }, 3500);
   }
 
