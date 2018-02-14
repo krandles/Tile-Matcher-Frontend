@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
   let scoreboard = document.getElementById("scoreboard");
   let highScore = document.getElementById("high-score");
   const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
+  let intervalID;
 
   //create shuffled array
   function shuffle(imageArray) {
@@ -44,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (currentHighScore == 0 || currentTimerVal < currentHighScore) {
       highScore.innerText = currentTimerVal;
     }
+    return currentHighScore
   }
 
   function renderCards(shuffledArray) {
@@ -130,7 +132,6 @@ document.addEventListener("DOMContentLoaded", function() {
           winCheck();
         }, 100);
       } else {
-        debugger
         tilesClickDelay();
         setTimeout(() => {
           firstClickedTile.classList.remove("flip");
@@ -152,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function winCheck() {
     let notMatchedTiles = 0;
-
+    const tiles = document.querySelectorAll(".card");
     for (let i = 0; i < tiles.length; i++) {
       if (!tiles[i].classList.contains("matched")) {
         notMatchedTiles++;
@@ -161,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (notMatchedTiles === 0) {
       setHighScore();
-      console.log("You won!");
       winMenu();
       return;
     } else {
@@ -173,8 +173,17 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
+  
+
   function winMenu() {
-    alert("You Win!!!");
+    clearInterval(intervalID)
+    const menuModal = document.getElementById('menu-modal')
+    menuModal.innerHTML = ''
+    const winMenuDiv = document.createElement('div')
+    const winMenuText = 'Congratulations! You Won!'
+    winMenuDiv.innerHTML = `<p>${winMenuText}</p>`
+    menuModal.appendChild(winMenuDiv)
+    menuModal.style.display = "block"
   }
 
   function loadStartMenu() {
@@ -183,11 +192,11 @@ document.addEventListener("DOMContentLoaded", function() {
     startButton.innerHTML = '<p>Start Game</p>'
     startButton.addEventListener('click', startGame)
     const menuText = "Welcome to Match Game"
-    const modalContent = document.createElement('div')
-    modalContent.innerHTML = `<p>${menuText}</p>`
+    const modalContent = document.createElement('span')
+    modalContent.innerHTML = `<p>${menuText}</p><br>`
     modalContent.classList.add('modal-content')
+    modalContent.appendChild(startButton)
     menuModal.appendChild(modalContent)
-    menuModal.appendChild(startButton)
     menuModal.style.display = "block"
   }
   
@@ -201,6 +210,7 @@ document.addEventListener("DOMContentLoaded", function() {
       addCardListeners()
     // }, 1500)
     let timerInterval = setInterval(function () { incrementTimer() }, 1000 )
+    intervalID = timerInterval
   }
 
   loadStartMenu()

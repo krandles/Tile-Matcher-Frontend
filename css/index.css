@@ -3,10 +3,47 @@
   transform: rotateY(180deg);
 }
 
+#statistics {
+  margin: auto;
+  margin-bottom: 50px;
+  justify-content: center;
+}
+
+#header {
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+}
+
+#timer-container {
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+}
+#timer {
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+}
+
+#failed-attempts {
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+}
+
+#scoreboard {
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+}
+
 #wrapper {
+  margin: auto;
+  justify-content: center;
   display: grid;
   grid-template-columns: repeat(4, 150px);
-  grid-gap: 10px;
+  grid-gap: 5px;
   grid-template-rows: repeat(4, 150px);
 }
 
@@ -15,8 +52,9 @@ p {
 }
 
 .card {
-  border: 1px solid rgb(0, 0, 0);
-  background-color: gray;
+  /* border-radius: 5px; */
+  /* border: 1px solid rgb(0, 0, 0); */
+  /* background-color: gray; */
   align-content: center;
 }
 
@@ -102,6 +140,7 @@ p {
 
 /* front pane, placed above back */
 .front {
+  border-radius: 5px;
   background-color: rgb(255, 0, 0);
   
   z-index: 2;
@@ -111,6 +150,7 @@ p {
 
 /* back, initially hidden pane */
 .back {
+  border-radius: 5px;
   background-color: green;
 
   transform: rotateY(540deg);
@@ -122,16 +162,27 @@ img {
 }
 
 .modal {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  border-radius: 5px;
   display: none; /* Hidden by default */
   position: absolute; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 50%;
   top: 50%;
   width: 50%; /* Full width */
-  height: 50%; /* Full height */
+  height: 40%; /* Full height */
   margin-left: -25%;
-  margin-top: -25%;
+  margin-top: -20%;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgba(116, 165, 240, 0.644); /* Black w/ opacity */
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform:translate(-50%, -50%);
 }
