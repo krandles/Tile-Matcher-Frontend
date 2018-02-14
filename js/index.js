@@ -1,4 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
+
+  let timerInterval = setInterval(function () { incrementTimer() }, 1000 )
+
+function incrementTimer() {
+  let timerDiv = document.getElementById("timer")
+  timerDiv.firstChild.innerText = parseInt(timerDiv.firstChild.innerHTML) + 1
+}
+
   //create shuffled array
   const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
   function shuffle(imageArray) {
@@ -22,46 +30,65 @@ document.addEventListener("DOMContentLoaded", function() {
   }
   let shuffledImageArray = shuffle(imageArray);
 
-  //grab wrapper from HTML
-  const gameWrapper = document.getElementById("wrapper");
-  //render cards on page
-  idx = 1;
-  for (let y = 1; y < 5; y++) {
-    for (let x = 1; x < 5; x++) {
-      //create flip container
-      let flipContainer = document.createElement("div");
-      flipContainer.classList.add(
-        `flip-container`,
-        `card`,
-        `row${x}`, //fix rows & cols
-        `column${y}` //fix rows & cols
-      );
-      // flipContainer.setAttribute("onclick", "this.classList.toggle('flip')");
-      flipContainer.id = `tile${idx}`;
-      //create flipper
-      let flipper = document.createElement("div");
-      flipper.classList.add("flipper");
-      //create front of card
-      let flipFront = document.createElement("div");
-      flipFront.classList.add("front");
-      flipFront.innerHTML = `<p>${shuffledImageArray[idx - 1]}</p>`;
-      // let flipFrontImage = document.createElement("img");
-      // flipFrontImage.src = ""; //SET IMAGE FOR FRONT HERE
-      //create back of card
-      let flipBack = document.createElement("div");
-      flipBack.classList.add("back");
-      let flipBackImage = document.createElement("img");
-      flipBackImage.src = `./images/tile${shuffledImageArray[idx - 1]}.png`;
-      //append things
-      // flipFront.append(flipFrontImage);
-      flipBack.append(flipBackImage);
-      flipper.append(flipFront);
-      flipper.append(flipBack);
-      flipContainer.append(flipper);
-      gameWrapper.append(flipContainer);
-      idx += 1;
+
+  function renderCards() {
+    //grab wrapper from HTML
+    const gameWrapper = document.getElementById("wrapper");
+    //render cards on page
+    idx = 1;
+    for (let y = 1; y < 5; y++) {
+      for (let x = 1; x < 5; x++) {
+        //create flip container
+        let flipContainer = document.createElement("div");
+        flipContainer.classList.add(
+          `flip-container`,
+          `card`,
+          `row${x}`, //fix rows & cols
+          `column${y}` //fix rows & cols
+        );
+        // flipContainer.setAttribute("onclick", "this.classList.toggle('flip')");
+        flipContainer.id = `tile${idx}`;
+        //create flipper
+        let flipper = document.createElement("div");
+        flipper.classList.add("flipper");
+        //create front of card
+        let flipFront = document.createElement("div");
+        flipFront.classList.add("front");
+        flipFront.innerHTML = `<p>${shuffledImageArray[idx - 1]}</p>`;
+        // let flipFrontImage = document.createElement("img");
+        // flipFrontImage.src = ""; //SET IMAGE FOR FRONT HERE
+        //create back of card
+        let flipBack = document.createElement("div");
+        flipBack.classList.add("back");
+        let flipBackImage = document.createElement("img");
+        flipBackImage.src = `./images/tile${shuffledImageArray[idx - 1]}.png`;
+        //append things
+        // flipFront.append(flipFrontImage);
+        flipBack.append(flipBackImage);
+        flipper.append(flipFront);
+        flipper.append(flipBack);
+        flipContainer.append(flipper);
+        gameWrapper.append(flipContainer);
+        idx += 1;
+      }
     }
   }
+
+  function previewCards() {
+    let cards = document.querySelectorAll('.card')
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        card.classList.add("flip")
+        setTimeout(() => {
+          card.classList.remove("flip")
+        }, 500 + (index * 100))
+      }, 500 + (index * 100))
+    })
+  }
+
+  renderCards()
+  previewCards()
+  
 
   //initialize vars for tiles
   let tiles = document.querySelectorAll(".card");
