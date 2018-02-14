@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", function() {
   let timerDiv = document.getElementById("timer");
   let scoreboard = document.getElementById("scoreboard");
   let highScore = document.getElementById("high-score");
+  const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
 
   //create shuffled array
-  const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
   function shuffle(imageArray) {
     var currentIndex = imageArray.length,
       temporaryValue,
@@ -26,12 +26,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     return imageArray;
   }
-  let shuffledImageArray = shuffle(imageArray);
 
   //create timer
-  let timerInterval = setInterval(function() {
-    incrementTimer();
-  }, 1000);
+  // let timerInterval = setInterval(function() {
+  //   incrementTimer();
+  // }, 1000);
 
   function incrementTimer() {
     timerDiv.firstChild.innerText = parseInt(timerDiv.firstChild.innerHTML) + 1;
@@ -47,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  function renderCards() {
+  function renderCards(shuffledArray) {
     //render cards on page
     idx = 1;
     for (let y = 1; y < 5; y++) {
@@ -68,14 +67,14 @@ document.addEventListener("DOMContentLoaded", function() {
         //create front of card
         let flipFront = document.createElement("div");
         flipFront.classList.add("front");
-        flipFront.innerHTML = `<p>${shuffledImageArray[idx - 1]}</p>`;
+        flipFront.innerHTML = `<p>${shuffledArray[idx - 1]}</p>`;
         // let flipFrontImage = document.createElement("img");
         // flipFrontImage.src = ""; //SET IMAGE FOR FRONT HERE
         //create back of card
         let flipBack = document.createElement("div");
         flipBack.classList.add("back");
         let flipBackImage = document.createElement("img");
-        flipBackImage.src = `./images/tile${shuffledImageArray[idx - 1]}.png`;
+        flipBackImage.src = `./images/tile${shuffledArray[idx - 1]}.png`;
         //append things
         // flipFront.append(flipFrontImage);
         flipBack.append(flipBackImage);
@@ -99,18 +98,18 @@ document.addEventListener("DOMContentLoaded", function() {
       }, 500 + index * 100);
     });
   }
+  
+  function addCardListeners() {
+    //initialize vars for tiles
+    let tiles = document.querySelectorAll(".card");
+    //set event listeners on tiles
+    for (let i = 0; i < tiles.length; i++) {
+      tiles[i].addEventListener("click", matching);
+    }
+  }
 
-  renderCards();
-  previewCards();
-
-  //initialize vars for tiles
-  let tiles = document.querySelectorAll(".card");
   let firstClickedTile;
   let secondClickedTile;
-  //set event listeners on tiles
-  for (let i = 0; i < tiles.length; i++) {
-    tiles[i].addEventListener("click", matching);
-  }
 
   //grab onto most recent 2 tiles here
   function matching(event) {
@@ -131,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function() {
           winCheck();
         }, 100);
       } else {
+        debugger
         tilesClickDelay();
         setTimeout(() => {
           firstClickedTile.classList.remove("flip");
@@ -144,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function tilesClickDelay() {
+    const tiles = document.querySelectorAll(".card");
     for (let i = 0; i < tiles.length; i++) {
       tiles[i].removeEventListener("click", matching);
     }
@@ -175,4 +176,33 @@ document.addEventListener("DOMContentLoaded", function() {
   function winMenu() {
     alert("You Win!!!");
   }
+
+  function loadStartMenu() {
+    const menuModal = document.getElementById('menu-modal')
+    const startButton = document.createElement('button')
+    startButton.innerHTML = '<p>Start Game</p>'
+    startButton.addEventListener('click', startGame)
+    const menuText = "Welcome to Match Game"
+    const modalContent = document.createElement('div')
+    modalContent.innerHTML = `<p>${menuText}</p>`
+    modalContent.classList.add('modal-content')
+    menuModal.appendChild(modalContent)
+    menuModal.appendChild(startButton)
+    menuModal.style.display = "block"
+  }
+  
+  function startGame() {
+    const menuModal = document.getElementById('menu-modal')
+    menuModal.style.display = "none"
+    let shuffledImageArray = shuffle(imageArray);
+    renderCards(shuffledImageArray)
+    previewCards()
+    // setTimeout(()=> {
+      addCardListeners()
+    // }, 1500)
+    let timerInterval = setInterval(function () { incrementTimer() }, 1000 )
+  }
+
+  loadStartMenu()
+  // startGame()
 });
