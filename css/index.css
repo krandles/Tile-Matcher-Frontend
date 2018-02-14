@@ -3,11 +3,48 @@
   transform: rotateY(180deg);
 }
 
+#statistics {
+  margin: auto;
+  margin-bottom: 50px;
+  justify-content: center;
+}
+
+#header {
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+}
+
+#timer-container {
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+}
+#timer {
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+}
+
+#failed-attempts {
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+}
+
+#scoreboard {
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+}
+
 #wrapper {
+  margin: auto;
+  justify-content: center;
   display: grid;
-  grid-template-columns: repeat(4, 150px);
+  grid-template-columns: repeat(4, 120px);
   grid-gap: 10px;
-  grid-template-rows: repeat(4, 150px);
+  grid-template-rows: repeat(4, 120px);
 }
 
 p {
@@ -103,7 +140,7 @@ p {
 /* front pane, placed above back */
 .front {
   background-color: rgb(255, 0, 0);
-  
+
   z-index: 2;
   /* for firefox 31 */
   transform: rotateY(0deg);
@@ -132,6 +169,6 @@ img {
   margin-left: -25%;
   margin-top: -25%;
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }

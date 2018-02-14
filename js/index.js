@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
   //declare variables
   const gameWrapper = document.getElementById("wrapper");
-  let timerDiv = document.getElementById("timer");
+  let timer = document.getElementById("timer");
   let scoreboard = document.getElementById("scoreboard");
   let highScore = document.getElementById("high-score");
   const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
@@ -33,14 +33,14 @@ document.addEventListener("DOMContentLoaded", function() {
   // }, 1000);
 
   function incrementTimer() {
-    timerDiv.firstChild.innerText = parseInt(timerDiv.firstChild.innerHTML) + 1;
+    timer.innerText = parseInt(timer.innerHTML) + 1;
   }
 
   //create scoreboard
   //set new high score on win
   function setHighScore() {
     let currentHighScore = parseInt(highScore.innerText);
-    let currentTimerVal = parseInt(timerDiv.firstChild.innerHTML);
+    let currentTimerVal = parseInt(timer.innerHTML);
     if (currentHighScore == 0 || currentTimerVal < currentHighScore) {
       highScore.innerText = currentTimerVal;
     }
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }, 500 + index * 100);
     });
   }
-  
+
   function addCardListeners() {
     //initialize vars for tiles
     let tiles = document.querySelectorAll(".card");
@@ -130,7 +130,6 @@ document.addEventListener("DOMContentLoaded", function() {
           winCheck();
         }, 100);
       } else {
-        debugger
         tilesClickDelay();
         setTimeout(() => {
           firstClickedTile.classList.remove("flip");
@@ -152,6 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function winCheck() {
     let notMatchedTiles = 0;
+    const tiles = document.querySelectorAll(".card");
 
     for (let i = 0; i < tiles.length; i++) {
       if (!tiles[i].classList.contains("matched")) {
@@ -178,31 +178,36 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function loadStartMenu() {
-    const menuModal = document.getElementById('menu-modal')
-    const startButton = document.createElement('button')
-    startButton.innerHTML = '<p>Start Game</p>'
-    startButton.addEventListener('click', startGame)
-    const menuText = "Welcome to Match Game"
-    const modalContent = document.createElement('div')
-    modalContent.innerHTML = `<p>${menuText}</p>`
-    modalContent.classList.add('modal-content')
-    menuModal.appendChild(modalContent)
-    menuModal.appendChild(startButton)
-    menuModal.style.display = "block"
-  }
-  
-  function startGame() {
-    const menuModal = document.getElementById('menu-modal')
-    menuModal.style.display = "none"
-    let shuffledImageArray = shuffle(imageArray);
-    renderCards(shuffledImageArray)
-    previewCards()
-    // setTimeout(()=> {
-      addCardListeners()
-    // }, 1500)
-    let timerInterval = setInterval(function () { incrementTimer() }, 1000 )
+    const menuModal = document.getElementById("menu-modal");
+    const startButton = document.createElement("button");
+    startButton.innerHTML = "<p>Start Game</p>";
+    startButton.addEventListener("click", startGame);
+    const menuText = "Welcome to Match Game";
+    const modalContent = document.createElement("div");
+    modalContent.innerHTML = `<p>${menuText}</p>`;
+    modalContent.classList.add("modal-content");
+    menuModal.appendChild(modalContent);
+    menuModal.appendChild(startButton);
+    menuModal.style.display = "block";
   }
 
-  loadStartMenu()
+  function startGame() {
+    const menuModal = document.getElementById("menu-modal");
+    menuModal.style.display = "none";
+    let shuffledImageArray = shuffle(imageArray);
+    renderCards(shuffledImageArray);
+
+    previewCards();
+
+    setTimeout(function() {
+      addCardListeners();
+
+      let timerInterval = setInterval(function() {
+        incrementTimer();
+      }, 1000);
+    }, 3500);
+  }
+
+  loadStartMenu();
   // startGame()
 });
