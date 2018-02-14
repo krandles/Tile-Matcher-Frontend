@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  let timerInterval = setInterval(function () { incrementTimer() }, 1000 )
+  
 
-function incrementTimer() {
-  let timerDiv = document.getElementById("timer")
-  timerDiv.firstChild.innerText = parseInt(timerDiv.firstChild.innerHTML) + 1
-}
+  function incrementTimer() {
+    let timerDiv = document.getElementById("timer")
+    timerDiv.firstChild.innerText = parseInt(timerDiv.firstChild.innerHTML) + 1
+  }
 
   //create shuffled array
   const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
@@ -28,10 +28,8 @@ function incrementTimer() {
 
     return imageArray;
   }
-  let shuffledImageArray = shuffle(imageArray);
 
-
-  function renderCards() {
+  function renderCards(shuffledArray) {
     //grab wrapper from HTML
     const gameWrapper = document.getElementById("wrapper");
     //render cards on page
@@ -54,14 +52,14 @@ function incrementTimer() {
         //create front of card
         let flipFront = document.createElement("div");
         flipFront.classList.add("front");
-        flipFront.innerHTML = `<p>${shuffledImageArray[idx - 1]}</p>`;
+        flipFront.innerHTML = `<p>${shuffledArray[idx - 1]}</p>`;
         // let flipFrontImage = document.createElement("img");
         // flipFrontImage.src = ""; //SET IMAGE FOR FRONT HERE
         //create back of card
         let flipBack = document.createElement("div");
         flipBack.classList.add("back");
         let flipBackImage = document.createElement("img");
-        flipBackImage.src = `./images/tile${shuffledImageArray[idx - 1]}.png`;
+        flipBackImage.src = `./images/tile${shuffledArray[idx - 1]}.png`;
         //append things
         // flipFront.append(flipFrontImage);
         flipBack.append(flipBackImage);
@@ -85,19 +83,18 @@ function incrementTimer() {
       }, 500 + (index * 100))
     })
   }
-
-  renderCards()
-  previewCards()
   
+  function addCardListeners() {
+    //initialize vars for tiles
+    let tiles = document.querySelectorAll(".card");
+    //set event listeners on tiles
+    for (let i = 0; i < tiles.length; i++) {
+      tiles[i].addEventListener("click", matching);
+    }
+  }
 
-  //initialize vars for tiles
-  let tiles = document.querySelectorAll(".card");
   let firstClickedTile;
   let secondClickedTile;
-  //set event listeners on tiles
-  for (let i = 0; i < tiles.length; i++) {
-    tiles[i].addEventListener("click", matching);
-  }
 
   //grab onto most recent 2 tiles here
   function matching(event) {
@@ -118,6 +115,7 @@ function incrementTimer() {
           winCheck();
         }, 100);
       } else {
+        debugger
         tilesClickDelay();
         setTimeout(() => {
           firstClickedTile.classList.remove("flip");
@@ -131,6 +129,7 @@ function incrementTimer() {
   }
 
   function tilesClickDelay() {
+    const tiles = document.querySelectorAll(".card");
     for (let i = 0; i < tiles.length; i++) {
       tiles[i].removeEventListener("click", matching);
     }
@@ -161,4 +160,33 @@ function incrementTimer() {
   function winMenu() {
     alert("You Win!!!");
   }
+
+  function loadStartMenu() {
+    const menuModal = document.getElementById('menu-modal')
+    const startButton = document.createElement('button')
+    startButton.innerHTML = '<p>Start Game</p>'
+    startButton.addEventListener('click', startGame)
+    const menuText = "Welcome to Match Game"
+    const modalContent = document.createElement('div')
+    modalContent.innerHTML = `<p>${menuText}</p>`
+    modalContent.classList.add('modal-content')
+    menuModal.appendChild(modalContent)
+    menuModal.appendChild(startButton)
+    menuModal.style.display = "block"
+  }
+  
+  function startGame() {
+    const menuModal = document.getElementById('menu-modal')
+    menuModal.style.display = "none"
+    let shuffledImageArray = shuffle(imageArray);
+    renderCards(shuffledImageArray)
+    previewCards()
+    // setTimeout(()=> {
+      addCardListeners()
+    // }, 1500)
+    let timerInterval = setInterval(function () { incrementTimer() }, 1000 )
+  }
+
+  loadStartMenu()
+  // startGame()
 });
