@@ -1,11 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
-
-  let timerInterval = setInterval(function () { incrementTimer() }, 1000 )
-
-function incrementTimer() {
-  let timerDiv = document.getElementById("timer")
-  timerDiv.firstChild.innerText = parseInt(timerDiv.firstChild.innerHTML) + 1
-}
+  //declare variables
+  const gameWrapper = document.getElementById("wrapper");
+  let timerDiv = document.getElementById("timer");
+  let scoreboard = document.getElementById("scoreboard");
+  let highScore = document.getElementById("high-score");
 
   //create shuffled array
   const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
@@ -30,10 +28,26 @@ function incrementTimer() {
   }
   let shuffledImageArray = shuffle(imageArray);
 
+  //create timer
+  let timerInterval = setInterval(function() {
+    incrementTimer();
+  }, 1000);
+
+  function incrementTimer() {
+    timerDiv.firstChild.innerText = parseInt(timerDiv.firstChild.innerHTML) + 1;
+  }
+
+  //create scoreboard
+  //set new high score on win
+  function setHighScore() {
+    let currentHighScore = parseInt(highScore.innerText);
+    let currentTimerVal = parseInt(timerDiv.firstChild.innerHTML);
+    if (currentHighScore == 0 || currentTimerVal < currentHighScore) {
+      highScore.innerText = currentTimerVal;
+    }
+  }
 
   function renderCards() {
-    //grab wrapper from HTML
-    const gameWrapper = document.getElementById("wrapper");
     //render cards on page
     idx = 1;
     for (let y = 1; y < 5; y++) {
@@ -75,20 +89,19 @@ function incrementTimer() {
   }
 
   function previewCards() {
-    let cards = document.querySelectorAll('.card')
+    let cards = document.querySelectorAll(".card");
     cards.forEach((card, index) => {
       setTimeout(() => {
-        card.classList.add("flip")
+        card.classList.add("flip");
         setTimeout(() => {
-          card.classList.remove("flip")
-        }, 500 + (index * 100))
-      }, 500 + (index * 100))
-    })
+          card.classList.remove("flip");
+        }, 500 + index * 100);
+      }, 500 + index * 100);
+    });
   }
 
-  renderCards()
-  previewCards()
-  
+  renderCards();
+  previewCards();
 
   //initialize vars for tiles
   let tiles = document.querySelectorAll(".card");
@@ -146,6 +159,7 @@ function incrementTimer() {
     }
 
     if (notMatchedTiles === 0) {
+      setHighScore();
       console.log("You won!");
       winMenu();
       return;
