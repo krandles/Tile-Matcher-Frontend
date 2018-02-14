@@ -197,11 +197,15 @@ document.addEventListener("DOMContentLoaded", function() {
     const startButton = document.createElement('button')
     startButton.innerHTML = '<p>Start Game</p>'
     startButton.addEventListener('click', startGame)
+    const newTilesetButton = document.createElement('button')
+    newTilesetButton.innerHTML = '<p>Create Tileset</p>'
+    newTilesetButton.addEventListener('click', loadNewTilesetMenu)
     const menuText = "Welcome to Match Game"
     const modalContent = document.createElement('span')
     modalContent.innerHTML = `<p>${menuText}</p><br>`
     modalContent.classList.add('modal-content')
     modalContent.appendChild(startButton)
+    modalContent.appendChild(newTilesetButton)
     menuModal.appendChild(modalContent)
     menuModal.style.display = "block"
   }
@@ -226,4 +230,46 @@ document.addEventListener("DOMContentLoaded", function() {
 
   loadStartMenu();
   // startGame()
+
+  function loadNewTilesetMenu() {
+    const menuModal = document.getElementById('menu-modal')
+    menuModal.innerHTML = ''
+    const fileInputForm = document.createElement('form')
+    const tilesetNameInput = document.createElement('input')
+    tilesetNameInput.setAttribute('type', 'text')
+    const fileInput = document.createElement('input')
+    fileInput.setAttribute('type', 'file')
+    fileInput.setAttribute('multiple', '')
+    fileInput.id = 'file-input'
+    fileInput.addEventListener('change', handleFiles, false)
+    const submitButton = document.createElement('input')
+    submitButton.setAttribute('type', 'submit')
+    const filesList = document.createElement('ul')
+    filesList.id = 'files-list'
+    fileInputForm.appendChild(tilesetNameInput)
+    fileInputForm.appendChild(fileInput)
+    fileInputForm.appendChild(submitButton)
+    fileInputForm.appendChild(filesList)
+    menuModal.appendChild(fileInputForm)
+
+    fileInputForm.addEventListener('submit', saveTileset())
+  }
+
+  function handleFiles() {
+    let filesList = document.getElementById('file-input').files
+    console.log(filesList)
+    // debugger
+    const filesListUl = document.getElementById('files-list')
+    filesListUl.innerHTML = ''
+    for (let i = 0; i < filesList.length; i++) {
+      const file = filesList[i];
+      const fileLi = document.createElement('li')
+      fileLi.innerText = file.name
+      filesListUl.appendChild(fileLi)
+    }
+  }
+
+  function saveTileset(event) {
+    
+  }
 });
