@@ -221,6 +221,7 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(res => res.json())
       .then(res => {
         let array = [...res]
+        console.log(array)
           array.select(function(tileset) {
             tileset.id = currentTilesetId;
           })
