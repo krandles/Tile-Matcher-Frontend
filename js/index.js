@@ -251,8 +251,9 @@ document.addEventListener("DOMContentLoaded", function() {
     fileInputForm.appendChild(submitButton)
     fileInputForm.appendChild(filesList)
     menuModal.appendChild(fileInputForm)
-
-    fileInputForm.addEventListener('submit', saveTileset())
+    fileInputForm.addEventListener('submit', saveTileset)
+    
+    // submitButton.addEventListener('submit', saveTileset)
   }
 
   function handleFiles() {
@@ -270,6 +271,21 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function saveTileset(event) {
-    
+    event.preventDefault()
+    const fileList = document.getElementById('file-input').files
+    const formData = new FormData()
+    // const filesArray = [...fileList]
+    const tilesetName = document.querySelector('input').value
+    // let data = { tileset: {
+    //   name: tilesetName,
+    //   tile_data: formData
+    // }}
+    formData.append('name', tilesetName)
+    formData.append('tile_data', fileList)
+    fetch('https://localhost:3000/tilesets', {
+      method: 'POST',
+      body: formData,
+      }
+    })
   }
 });
