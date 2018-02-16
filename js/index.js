@@ -6,16 +6,8 @@ document.addEventListener("DOMContentLoaded", function() {
   let highScore = document.getElementById("high-score");
   const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
   let intervalID;
-  const newImageFilesArray = [
-    "./images/programming_logos/css3-full.svg",
-    "./images/programming_logos/github-badge.svg",
-    "./images/programming_logos/html5.svg",
-    "./images/programming_logos/js-badge.svg",
-    "./images/programming_logos/python.svg",
-    "./images/programming_logos/react.svg",
-    "./images/programming_logos/ruby-on-rails.svg",
-    "./images/programming_logos/ruby.svg"
-  ];
+  let currentTilesetId;
+  // const newImageFilesArray = [];
 
   //create shuffled array
   function shuffle(imageArray) {
@@ -47,18 +39,37 @@ document.addEventListener("DOMContentLoaded", function() {
     timer.innerText = parseInt(timer.innerHTML) + 1;
   }
 
+  // function getHighScore(){
+  //   fetch()
+  // }
+
+  function updateHighScore(currentTimerVal) {
+    fetch(`http://localhost:3000/api/v1/tilesets/${currentTilesetId}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        high_score: currentTimerVal
+      }),
+      headers: {
+        "content-type": "application/json"
+      }
+    });
+  }
+
   //create scoreboard
   //set new high score on win
   function setHighScore() {
+    getTileset().then(console.log);
     let currentHighScore = parseInt(highScore.innerText);
     let currentTimerVal = parseInt(timer.innerHTML);
     if (currentHighScore == 0 || currentTimerVal < currentHighScore) {
       highScore.innerText = currentTimerVal;
+      updateHighScore(currentTimerVal);
     }
     return currentHighScore;
   }
 
-  function renderCards(shuffledArray) {
+  function renderCards(shuffledArray, newImageFilesArray) {
+    // debugger;
     //render cards on page
     idx = 1;
     for (let y = 1; y < 5; y++) {
@@ -87,6 +98,9 @@ document.addEventListener("DOMContentLoaded", function() {
         flipBack.classList.add("back");
         let flipBackImage = document.createElement("img");
         // flipBackImage.src = `./images/tile${shuffledArray[idx - 1]}.png`; //emoji image tiles render
+        // console.log(newImageFilesArray);
+        // console.log(shuffledArray);
+        // debugger;
         flipBackImage.src = `${newImageFilesArray[shuffledArray[idx - 1] - 1]}`;
         //append things
         // flipFront.append(flipFrontImage);
@@ -196,6 +210,30 @@ document.addEventListener("DOMContentLoaded", function() {
     menuModal.style.display = "block";
   }
 
+  function getTilesets() {
+    return fetch("http://localhost:3000/api/v1/tilesets").then(res =>
+      res.json()
+    );
+  }
+
+  function getTileset() {
+    return fetch(`http://localhost:3000/api/v1/tilesets/`)
+      .then(res => res.json())
+      .then(res =>
+        res
+          .select(function(tileset) {
+            tileset.id = currentTilesetId;
+          })
+          .then(console.log)
+      );
+  }
+
+  function getTiles(id) {
+    return fetch(`http://localhost:3000/api/v1/tilesets/${id}`).then(res =>
+      res.json()
+    );
+  }
+
   function loadStartMenu() {
     const menuModal = document.getElementById("menu-modal");
     menuModal.removeEventListener("click", loadStartMenu);
@@ -203,9 +241,21 @@ document.addEventListener("DOMContentLoaded", function() {
     let wrapper = document.getElementById("wrapper");
     wrapper.innerHTML = "";
     timer.innerHTML = "0";
+    getTilesets().then(data => {
+      const tilesetSelect = document.createElement("select");
+      tilesetSelect.id = "tileset-selector";
+      data.map(tileset => {
+        let new_option = document.createElement("option");
+        new_option.value = tileset.id;
+        new_option.innerText = tileset.name;
+        tilesetSelect.append(new_option);
+        currentTilesetId = tileset.id;
+      });
+      menuModal.append(tilesetSelect);
+    });
     const startButton = document.createElement("button");
     startButton.innerHTML = "<p>Start Game</p>";
-    startButton.addEventListener("click", startGame);
+    startButton.addEventListener("click", loadTiles);
     const newTilesetButton = document.createElement("button");
     newTilesetButton.innerHTML = "<p>Create Tileset</p>";
     newTilesetButton.addEventListener("click", loadNewTilesetMenu);
@@ -219,11 +269,29 @@ document.addEventListener("DOMContentLoaded", function() {
     menuModal.style.display = "block";
   }
 
-  function startGame() {
+  function loadTiles() {
+    let selectValue = document.querySelector("#tileset-selector");
+    const newImageFilesArray = [];
+    getTiles(selectValue.value)
+      .then(json => {
+        // console.log(json);
+        // debugger;
+        json.forEach(function(tile_object) {
+          newImageFilesArray.push(tile_object.path);
+        });
+        return newImageFilesArray;
+      })
+      .then(res => startGame(res));
+  }
+
+  function startGame(imagesArray) {
     const menuModal = document.getElementById("menu-modal");
     menuModal.style.display = "none";
     let shuffledImageArray = shuffle(imageArray);
-    renderCards(shuffledImageArray);
+    // console.log(imagesArray);
+    // console.log(shuffledImageArray);
+    // debugger;
+    renderCards(shuffledImageArray, imagesArray);
 
     previewCards();
 
@@ -279,21 +347,20 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function saveTileset(event) {
-    event.preventDefault()
-    const fileList = document.getElementById('file-input').files
-    const formData = new FormData()
+    event.preventDefault();
+    const fileList = document.getElementById("file-input").files;
+    const formData = new FormData();
     // const filesArray = [...fileList]
-    const tilesetName = document.querySelector('input').value
+    const tilesetName = document.querySelector("input").value;
     // let data = { tileset: {
     //   name: tilesetName,
     //   tile_data: formData
     // }}
-    formData.append('name', tilesetName)
-    formData.append('tile_data', fileList)
-    fetch('https://localhost:3000/tilesets', {
-      method: 'POST',
-      body: formData,
-      }
-    })
+    formData.append("name", tilesetName);
+    formData.append("tile_data", fileList);
+    fetch("https://localhost:3000/tilesets", {
+      method: "POST",
+      body: formData
+    });
   }
 });
