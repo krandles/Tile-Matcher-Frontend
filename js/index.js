@@ -219,13 +219,13 @@ document.addEventListener("DOMContentLoaded", function() {
   function getTileset() {
     return fetch(`http://localhost:3000/api/v1/tilesets/`)
       .then(res => res.json())
-      .then(res =>
-        res
-          .select(function(tileset) {
+      .then(res => {
+        let array = [...res]
+          array.select(function(tileset) {
             tileset.id = currentTilesetId;
           })
           .then(console.log)
-      );
+      });
   }
 
   function getTiles(id) {
