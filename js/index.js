@@ -46,12 +46,12 @@ document.addEventListener("DOMContentLoaded", function() {
   function updateHighScore(currentTimerVal) {
     fetch(`http://localhost:3000/api/v1/tilesets/${currentTilesetId}`, {
       method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         high_score: currentTimerVal
-      }),
-      headers: {
-        "content-type": "application/json"
-      }
+      })
     });
   }
 
