@@ -6,6 +6,16 @@ document.addEventListener("DOMContentLoaded", function() {
   let highScore = document.getElementById("high-score");
   const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
   let intervalID;
+  const newImageFilesArray = [
+    "./images/programming_logos/css3-full.svg",
+    "./images/programming_logos/github-badge.svg",
+    "./images/programming_logos/html5.svg",
+    "./images/programming_logos/js-badge.svg",
+    "./images/programming_logos/python.svg",
+    "./images/programming_logos/react.svg",
+    "./images/programming_logos/ruby-on-rails.svg",
+    "./images/programming_logos/ruby.svg"
+  ];
 
   //create shuffled array
   function shuffle(imageArray) {
@@ -45,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (currentHighScore == 0 || currentTimerVal < currentHighScore) {
       highScore.innerText = currentTimerVal;
     }
-    return currentHighScore
+    return currentHighScore;
   }
 
   function renderCards(shuffledArray) {
@@ -76,7 +86,8 @@ document.addEventListener("DOMContentLoaded", function() {
         let flipBack = document.createElement("div");
         flipBack.classList.add("back");
         let flipBackImage = document.createElement("img");
-        flipBackImage.src = `./images/tile${shuffledArray[idx - 1]}.png`;
+        // flipBackImage.src = `./images/tile${shuffledArray[idx - 1]}.png`; //emoji image tiles render
+        flipBackImage.src = `${newImageFilesArray[shuffledArray[idx - 1] - 1]}`;
         //append things
         // flipFront.append(flipFrontImage);
         flipBack.append(flipBackImage);
@@ -173,41 +184,39 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  
-
   function winMenu() {
-    clearInterval(intervalID)
-    const menuModal = document.getElementById('menu-modal')
-    menuModal.innerHTML = ''
-    const winMenuDiv = document.createElement('div')
-    const winMenuText = 'Congratulations! You Won!'
-    winMenuDiv.innerHTML = `<p>${winMenuText}</p>`
-    menuModal.appendChild(winMenuDiv)
-    menuModal.addEventListener('click', loadStartMenu)
-    menuModal.style.display = "block"
+    clearInterval(intervalID);
+    const menuModal = document.getElementById("menu-modal");
+    menuModal.innerHTML = "";
+    const winMenuDiv = document.createElement("div");
+    const winMenuText = "Congratulations! You Won!";
+    winMenuDiv.innerHTML = `<p>${winMenuText}</p>`;
+    menuModal.appendChild(winMenuDiv);
+    menuModal.addEventListener("click", loadStartMenu);
+    menuModal.style.display = "block";
   }
 
   function loadStartMenu() {
-    const menuModal = document.getElementById('menu-modal')
-    menuModal.removeEventListener('click', loadStartMenu)
-    menuModal.innerHTML = ''
-    let wrapper = document.getElementById('wrapper')
-    wrapper.innerHTML = ''
-    timer.innerHTML = '0'
-    const startButton = document.createElement('button')
-    startButton.innerHTML = '<p>Start Game</p>'
-    startButton.addEventListener('click', startGame)
-    const newTilesetButton = document.createElement('button')
-    newTilesetButton.innerHTML = '<p>Create Tileset</p>'
-    newTilesetButton.addEventListener('click', loadNewTilesetMenu)
-    const menuText = "Welcome to Match Game"
-    const modalContent = document.createElement('span')
-    modalContent.innerHTML = `<p>${menuText}</p><br>`
-    modalContent.classList.add('modal-content')
-    modalContent.appendChild(startButton)
-    modalContent.appendChild(newTilesetButton)
-    menuModal.appendChild(modalContent)
-    menuModal.style.display = "block"
+    const menuModal = document.getElementById("menu-modal");
+    menuModal.removeEventListener("click", loadStartMenu);
+    menuModal.innerHTML = "";
+    let wrapper = document.getElementById("wrapper");
+    wrapper.innerHTML = "";
+    timer.innerHTML = "0";
+    const startButton = document.createElement("button");
+    startButton.innerHTML = "<p>Start Game</p>";
+    startButton.addEventListener("click", startGame);
+    const newTilesetButton = document.createElement("button");
+    newTilesetButton.innerHTML = "<p>Create Tileset</p>";
+    newTilesetButton.addEventListener("click", loadNewTilesetMenu);
+    const menuText = "Welcome to Match Game";
+    const modalContent = document.createElement("span");
+    modalContent.innerHTML = `<p>${menuText}</p><br>`;
+    modalContent.classList.add("modal-content");
+    modalContent.appendChild(startButton);
+    modalContent.appendChild(newTilesetButton);
+    menuModal.appendChild(modalContent);
+    menuModal.style.display = "block";
   }
 
   function startGame() {
@@ -224,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function() {
       let timerInterval = setInterval(function() {
         incrementTimer();
       }, 1000);
-      intervalID = timerInterval
+      intervalID = timerInterval;
     }, 3500);
   }
 
@@ -232,44 +241,42 @@ document.addEventListener("DOMContentLoaded", function() {
   // startGame()
 
   function loadNewTilesetMenu() {
-    const menuModal = document.getElementById('menu-modal')
-    menuModal.innerHTML = ''
-    const fileInputForm = document.createElement('form')
-    const tilesetNameInput = document.createElement('input')
-    tilesetNameInput.setAttribute('type', 'text')
-    const fileInput = document.createElement('input')
-    fileInput.setAttribute('type', 'file')
-    fileInput.setAttribute('multiple', '')
-    fileInput.id = 'file-input'
-    fileInput.addEventListener('change', handleFiles, false)
-    const submitButton = document.createElement('input')
-    submitButton.setAttribute('type', 'submit')
-    const filesList = document.createElement('ul')
-    filesList.id = 'files-list'
-    fileInputForm.appendChild(tilesetNameInput)
-    fileInputForm.appendChild(fileInput)
-    fileInputForm.appendChild(submitButton)
-    fileInputForm.appendChild(filesList)
-    menuModal.appendChild(fileInputForm)
+    const menuModal = document.getElementById("menu-modal");
+    menuModal.innerHTML = "";
+    const fileInputForm = document.createElement("form");
+    const tilesetNameInput = document.createElement("input");
+    tilesetNameInput.setAttribute("type", "text");
+    const fileInput = document.createElement("input");
+    fileInput.setAttribute("type", "file");
+    fileInput.setAttribute("multiple", "");
+    fileInput.id = "file-input";
+    fileInput.addEventListener("change", handleFiles, false);
+    const submitButton = document.createElement("input");
+    submitButton.setAttribute("type", "submit");
+    const filesList = document.createElement("ul");
+    filesList.id = "files-list";
+    fileInputForm.appendChild(tilesetNameInput);
+    fileInputForm.appendChild(fileInput);
+    fileInputForm.appendChild(submitButton);
+    fileInputForm.appendChild(filesList);
+    menuModal.appendChild(fileInputForm);
 
-    fileInputForm.addEventListener('submit', saveTileset())
+    fileInputForm.addEventListener("submit", saveTileset());
   }
 
   function handleFiles() {
-    let filesList = document.getElementById('file-input').files
-    console.log(filesList)
+    let filesList = document.getElementById("file-input").files;
+    console.log(filesList);
     // debugger
-    const filesListUl = document.getElementById('files-list')
-    filesListUl.innerHTML = ''
+    const filesListUl = document.getElementById("files-list");
+    filesListUl.innerHTML = "";
     for (let i = 0; i < filesList.length; i++) {
       const file = filesList[i];
-      const fileLi = document.createElement('li')
-      fileLi.innerText = file.name
-      filesListUl.appendChild(fileLi)
+      const fileLi = document.createElement("li");
+      fileLi.innerText = file.name;
+      filesListUl.appendChild(fileLi);
     }
   }
 
-  function saveTileset(event) {
-    
-  }
+  function saveTileset(event) {}
 });
