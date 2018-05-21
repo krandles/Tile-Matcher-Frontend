@@ -177,12 +177,16 @@ img {
   left: 50%;
   top: 50%;
   width: 50%; /* Full width */
-  height: 40%; /* Full height */
+  height: 30%; /* Full height */
   margin-left: -25%;
   margin-top: -20%;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgb(116, 166, 240); /* Black w/ opacity */
+}
+
+#tileset-selector {
+  margin-top: 100px;
 }
 
 .modal-content {

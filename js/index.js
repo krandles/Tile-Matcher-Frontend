@@ -7,7 +7,10 @@ document.addEventListener("DOMContentLoaded", function() {
   const imageArray = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8];
   let intervalID;
   let currentTilesetId;
-  // const newImageFilesArray = [];
+  // production
+  const apiRoot = "https://infinite-beach-25842.herokuapp.com/api/v1"
+  //dev
+  // const apiRoot = "http://localhost:3000/api/v1"
 
   //create shuffled array
   function shuffle(imageArray) {
@@ -30,21 +33,12 @@ document.addEventListener("DOMContentLoaded", function() {
     return imageArray;
   }
 
-  //create timer
-  // let timerInterval = setInterval(function() {
-  //   incrementTimer();
-  // }, 1000);
-
   function incrementTimer() {
     timer.innerText = parseInt(timer.innerHTML) + 1;
   }
 
-  // function getHighScore(){
-  //   fetch()
-  // }
-
   function updateHighScore(currentTimerVal) {
-    fetch(`http://localhost:3000/api/v1/tilesets/${currentTilesetId}`, {
+    fetch(`${apiRoot}/tilesets/${currentTilesetId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
@@ -63,13 +57,11 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentTimerVal = parseInt(timer.innerHTML);
     if (currentHighScore == 0 || currentTimerVal < currentHighScore) {
       highScore.innerText = currentTimerVal;
-      updateHighScore(currentTimerVal);
     }
     return currentHighScore;
   }
 
   function renderCards(shuffledArray, newImageFilesArray) {
-    // debugger;
     //render cards on page
     idx = 1;
     for (let y = 1; y < 5; y++) {
@@ -79,10 +71,10 @@ document.addEventListener("DOMContentLoaded", function() {
         flipContainer.classList.add(
           `flip-container`,
           `card`,
-          `row${x}`, //fix rows & cols
-          `column${y}` //fix rows & cols
+          `row${x}`,
+          `column${y}`
         );
-        // flipContainer.setAttribute("onclick", "this.classList.toggle('flip')");
+
         flipContainer.id = `tile${idx}`;
         //create flipper
         let flipper = document.createElement("div");
@@ -90,20 +82,12 @@ document.addEventListener("DOMContentLoaded", function() {
         //create front of card
         let flipFront = document.createElement("div");
         flipFront.classList.add("front");
-        flipFront.innerHTML = `<p>${shuffledArray[idx - 1]}</p>`;
-        // let flipFrontImage = document.createElement("img");
-        // flipFrontImage.src = ""; //SET IMAGE FOR FRONT HERE
         //create back of card
         let flipBack = document.createElement("div");
         flipBack.classList.add("back");
         let flipBackImage = document.createElement("img");
-        // flipBackImage.src = `./images/tile${shuffledArray[idx - 1]}.png`; //emoji image tiles render
-        // console.log(newImageFilesArray);
-        // console.log(shuffledArray);
-        // debugger;
         flipBackImage.src = `${newImageFilesArray[shuffledArray[idx - 1] - 1]}`;
         //append things
-        // flipFront.append(flipFrontImage);
         flipBack.append(flipBackImage);
         flipper.append(flipFront);
         flipper.append(flipBack);
@@ -190,11 +174,9 @@ document.addEventListener("DOMContentLoaded", function() {
       winMenu();
       return;
     } else {
-      // setTimeout(() => {
       for (let i = 0; i < tiles.length; i++) {
         tiles[i].addEventListener("click", matching);
       }
-      // }, 700);
     }
   }
 
@@ -204,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function() {
     menuModal.innerHTML = "";
     const winMenuDiv = document.createElement("div");
     const winMenuText = "Congratulations! You Won!";
+    winMenuDiv.classList.add("modal-content")
     winMenuDiv.innerHTML = `<p>${winMenuText}</p>`;
     menuModal.appendChild(winMenuDiv);
     menuModal.addEventListener("click", loadStartMenu);
@@ -211,13 +194,13 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function getTilesets() {
-    return fetch("http://localhost:3000/api/v1/tilesets").then(res =>
+    return fetch(`${apiRoot}/tilesets`).then(res =>
       res.json()
     );
   }
 
   function getTileset() {
-    return fetch(`http://localhost:3000/api/v1/tilesets/`)
+    return fetch(`${apiRoot}/tilesets/`)
       .then(res => res.json())
       .then(res => {
         let array = [...res]
@@ -230,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function getTiles(id) {
-    return fetch(`http://localhost:3000/api/v1/tilesets/${id}`).then(res =>
+    return fetch(`${apiRoot}/tilesets/${id}`).then(res =>
       res.json()
     );
   }
@@ -243,8 +226,10 @@ document.addEventListener("DOMContentLoaded", function() {
     wrapper.innerHTML = "";
     timer.innerHTML = "0";
     getTilesets().then(data => {
+      const tilesetSelectDiv = document.createElement("div");
       const tilesetSelect = document.createElement("select");
-      tilesetSelect.id = "tileset-selector";
+      tilesetSelect.id = "tileset-selector"
+      tilesetSelectDiv.id = "tileset-selector-div";
       data.map(tileset => {
         let new_option = document.createElement("option");
         new_option.value = tileset.id;
@@ -252,7 +237,11 @@ document.addEventListener("DOMContentLoaded", function() {
         tilesetSelect.append(new_option);
         currentTilesetId = tileset.id;
       });
-      menuModal.append(tilesetSelect);
+      const tilesetSelectHeader = document.createElement("p")
+      tilesetSelectHeader.innerText = "Select Tileset: "
+      tilesetSelectDiv.append(tilesetSelectHeader)
+      tilesetSelectDiv.append(tilesetSelect)
+      menuModal.append(tilesetSelectDiv);
     });
     const startButton = document.createElement("button");
     startButton.innerHTML = "<p>Start Game</p>";
@@ -260,12 +249,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const newTilesetButton = document.createElement("button");
     newTilesetButton.innerHTML = "<p>Create Tileset</p>";
     newTilesetButton.addEventListener("click", loadNewTilesetMenu);
-    const menuText = "Welcome to Match Game";
     const modalContent = document.createElement("span");
-    modalContent.innerHTML = `<p>${menuText}</p><br>`;
     modalContent.classList.add("modal-content");
     modalContent.appendChild(startButton);
-    modalContent.appendChild(newTilesetButton);
     menuModal.appendChild(modalContent);
     menuModal.style.display = "block";
   }
@@ -275,8 +261,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const newImageFilesArray = [];
     getTiles(selectValue.value)
       .then(json => {
-        // console.log(json);
-        // debugger;
         json.forEach(function(tile_object) {
           newImageFilesArray.push(tile_object.path);
         });
@@ -289,9 +273,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const menuModal = document.getElementById("menu-modal");
     menuModal.style.display = "none";
     let shuffledImageArray = shuffle(imageArray);
-    // console.log(imagesArray);
-    // console.log(shuffledImageArray);
-    // debugger;
     renderCards(shuffledImageArray, imagesArray);
 
     previewCards();
@@ -307,7 +288,6 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   loadStartMenu();
-  // startGame()
 
   function loadNewTilesetMenu() {
     const menuModal = document.getElementById("menu-modal");
@@ -336,7 +316,6 @@ document.addEventListener("DOMContentLoaded", function() {
   function handleFiles() {
     let filesList = document.getElementById("file-input").files;
     console.log(filesList);
-    // debugger
     const filesListUl = document.getElementById("files-list");
     filesListUl.innerHTML = "";
     for (let i = 0; i < filesList.length; i++) {
@@ -351,12 +330,7 @@ document.addEventListener("DOMContentLoaded", function() {
     event.preventDefault();
     const fileList = document.getElementById("file-input").files;
     const formData = new FormData();
-    // const filesArray = [...fileList]
     const tilesetName = document.querySelector("input").value;
-    // let data = { tileset: {
-    //   name: tilesetName,
-    //   tile_data: formData
-    // }}
     formData.append("name", tilesetName);
     formData.append("tile_data", fileList);
     fetch("https://localhost:3000/tilesets", {
