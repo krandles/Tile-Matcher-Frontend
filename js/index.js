@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const menuModal = document.getElementById("menu-modal");
     menuModal.innerHTML = "";
     const winMenuDiv = document.createElement("div");
-    const winMenuText = "Congratulations! You Won!";
+    const winMenuText = "You won! Click here to play again.";
     winMenuDiv.classList.add("modal-content")
     winMenuDiv.innerHTML = `<p>${winMenuText}</p>`;
     menuModal.appendChild(winMenuDiv);
@@ -253,9 +253,6 @@ document.addEventListener("DOMContentLoaded", function() {
       modalContent.appendChild(startButtonDiv);
       menuModal.appendChild(modalContent);
     });
-    // const newTilesetButton = document.createElement("button");
-    // newTilesetButton.innerHTML = "<p>Create Tileset</p>";
-    // newTilesetButton.addEventListener("click", loadNewTilesetMenu);
   }
 
   function loadTiles() {
