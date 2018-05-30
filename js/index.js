@@ -203,12 +203,10 @@ document.addEventListener("DOMContentLoaded", function() {
     return fetch(`${apiRoot}/tilesets/`)
       .then(res => res.json())
       .then(res => {
-        let array = [...res]
-        console.log(array)
-          array.select(function(tileset) {
-            tileset.id = currentTilesetId;
-          })
-          .then(console.log)
+      let array = [...res]
+        array.find(function(tileset) {
+          tileset.id = currentTilesetId;
+        })
       });
   }
 
@@ -241,19 +239,23 @@ document.addEventListener("DOMContentLoaded", function() {
       tilesetSelectHeader.innerText = "Select Tileset: "
       tilesetSelectDiv.append(tilesetSelectHeader)
       tilesetSelectDiv.append(tilesetSelect)
-      menuModal.append(tilesetSelectDiv);
+      // menuModal.append(tilesetSelectDiv);
+      const startButtonDiv = document.createElement("div");
+      const startButton = document.createElement("button");
+      startButton.innerHTML = "<p>Start Game</p>";
+      startButton.addEventListener("click", loadTiles);
+      startButtonDiv.appendChild(startButton)
+      menuModal.appendChild(startButtonDiv);
+      menuModal.style.display = "block";
+      const modalContent = document.createElement("div");
+      modalContent.classList.add("modal-content");
+      modalContent.appendChild(tilesetSelectDiv);
+      modalContent.appendChild(startButtonDiv);
+      menuModal.appendChild(modalContent);
     });
-    const startButton = document.createElement("button");
-    startButton.innerHTML = "<p>Start Game</p>";
-    startButton.addEventListener("click", loadTiles);
-    const newTilesetButton = document.createElement("button");
-    newTilesetButton.innerHTML = "<p>Create Tileset</p>";
-    newTilesetButton.addEventListener("click", loadNewTilesetMenu);
-    const modalContent = document.createElement("span");
-    modalContent.classList.add("modal-content");
-    modalContent.appendChild(startButton);
-    menuModal.appendChild(modalContent);
-    menuModal.style.display = "block";
+    // const newTilesetButton = document.createElement("button");
+    // newTilesetButton.innerHTML = "<p>Create Tileset</p>";
+    // newTilesetButton.addEventListener("click", loadNewTilesetMenu);
   }
 
   function loadTiles() {
